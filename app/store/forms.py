@@ -65,7 +65,7 @@ class CustomerAddressEditForm(forms.ModelForm):
         fields = [
             'contact_phone_number', 'contact_email',
             'unit', 'street', 'city', 'state', 'postcode',
-            'country', 'is_billing', 'note'
+            'country', 'is_billing', 'note', 'is_default'
         ]
 
 
@@ -87,5 +87,5 @@ class CustomerAddressCreateForm(forms.ModelForm):
         fields = [
             'contact_phone_number', 'contact_email',
             'unit', 'street', 'city', 'state', 'postcode',
-            'country', 'is_billing', 'note'
+            'country', 'is_billing', 'note', 'is_default'
         ]

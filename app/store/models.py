@@ -113,10 +113,30 @@ class Address(models.Model):
     country = models.CharField(max_length=64)
     is_billing = models.BooleanField(default=False)
     note = models.TextField(null=True, blank=True)
+    is_default = models.BooleanField(default=False, blank=False, null=False)
 
     def __str__(self):
+        is_default = "(default)" if self.is_default else ''
         address_type = 'Billing' if self.is_billing else 'Shipping'
-        return f"{self.customer} - {address_type} Address"
+        return f"{self.customer} - {address_type} Address {is_default}"
+
+    def save(self, *args, **kwargs):
+        self.validate_is_default()
+        super().save(*args, **kwargs)
+
+    def validate_is_default(self):
+        # if self.is_default:
+        #     self.customer.addresses.update(is_default=False)
+        if self.is_default:
+            if self.is_billing:
+                Address.objects.filter(
+                    customer=self.customer, is_billing=True, is_default=True
+                ).update(is_default=False)
+            else:
+                Address.objects.filter(
+                    customer=self.customer, is_billing=False, is_default=True
+                ).update(is_default=False)
+
 
 
 """
